@@ -114,13 +114,14 @@ public class UserAction implements Runnable {
     }
 
     protected String clickAd() {
-        String fullAdLink = BakaConfig.INDEX + "/" + this.getAdLink();
+        String fullAdLink = this.getAdLink();
         return HttpTools.get(client, fullAdLink);
     }
 
     protected String getAdLink() {
         String indexStr = HttpTools.get(client, BakaConfig.INDEX);
-        String adLink = findString(indexStr, "(diy_ad_move.php\\?[0-9a-zA-Z=&]+)\"");
+        Document doc = Jsoup.parse(indexStr);
+        String adLink = doc.select(".clear").select("a").attr("href");
         return adLink;
     }
 
